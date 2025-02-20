@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const connectMongoDB = require('./config/mongoConfig');
 const pool = require('./config/postgreConfig');
-const aiRoutes = require('./routes/ai');
 
+const aiRoutes = require('./routes/ai');
 const authRoutes = require('./routes/auth');
 const courseRoutes = require('./routes/courses');
 
