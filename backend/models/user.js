@@ -18,10 +18,25 @@ const findUserByEmail = async (email) => {
     return (await pool.query(query, [email])).rows[0];
 };
 
+const findAllUsers = async () => {
+    const query = `SELECT id, name, email, role FROM users`;
+    return (await pool.query(query)).rows;
+};
+
+const updateUserRole = async (id, role) => {
+    const query = `UPDATE users SET role = $1 WHERE id = $2 RETURNING *`;
+    return (await pool.query(query, [role, id])).rows[0];
+};
+
+const deleteUser = async (id) => {
+    const query = `DELETE FROM users WHERE id = $1`;
+    await pool.query(query, [id]);
+};
+
 const updateUserPassword = async (userId, newPassword) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const query = `UPDATE users SET password = $1 WHERE email = $2`;
+    const query = `UPDATE users SET password = $1 WHERE id = $2`;
     await pool.query(query, [hashedPassword, userId]);
 };
 
-module.exports = { createUser, findUserByEmail, updateUserPassword, findUserById };
+module.exports = { createUser, findUserByEmail, findAllUsers, updateUserRole, deleteUser, updateUserPassword, findUserById };
