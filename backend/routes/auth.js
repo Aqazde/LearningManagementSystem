@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const { findUserByEmail, findUserById, createUser, updateUserPassword } = require('../models/user');
 const { storeRefreshToken, findRefreshToken, deleteRefreshToken } = require('../models/refreshToken');
 const { storeResetToken, findResetToken, deleteResetToken } = require('../models/resetToken');
+const { authenticateToken } = require('../middlewares/auth');
 const { sendResetEmail } = require('../utils/emailService');
 const { logger } = require('../utils/logger');
 
@@ -15,7 +16,8 @@ const router = express.Router();
  * Creates a new user with hashed password and stores in PostgreSQL
  */
 router.post('/register', async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
+    const role = req.body.role || 'student';
 
     try {
         const existingUser = await findUserByEmail(email);
@@ -66,7 +68,10 @@ router.post('/login', async (req, res) => {
         await storeRefreshToken(user.id, refreshToken);
         logger.info(`User logged in: ${email}`);
 
-        res.status(200).json({ message: 'Login successful', accessToken, refreshToken });
+        res.status(200).json({ message: 'Login successful',
+            accessToken,
+            refreshToken,
+            role: user.role });
     } catch (error) {
         logger.error(`Error logging in: ${error.message}`);
         res.status(500).json({ message: 'Error logging in', error: error.message });
@@ -188,6 +193,26 @@ router.post('/reset-password', async (req, res) => {
     }
 });
 
+/**
+ * 🔹 Get Current User Info (Requires Authentication)
+ * Method: GET
+ * Route: /api/auth/me
+ */
+router.get('/me', authenticateToken, async (req, res) => {
+    try {
+        const user = await findUserById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching user details', error: error.message });
+    }
+});
 
 
 module.exports = router;
