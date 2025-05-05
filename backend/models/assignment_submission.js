@@ -3,11 +3,12 @@ const pool = require('../config/postgreConfig');
 /**
  * 🔹 Submit an assignment (Student Only)
  */
-const submitAssignment = async (assignmentId, studentId, submissionText) => {
-    const query = `INSERT INTO assignment_submissions (assignment_id, student_id, submission_text) 
-                   VALUES ($1, $2, $3) RETURNING *`;
-    const values = [assignmentId, studentId, submissionText];
-    const result = await pool.query(query, values);
+const submitAssignment = async (assignmentId, studentId, submissionText, fileUrl = null) => {
+    const query = `
+        INSERT INTO assignment_submissions 
+        (assignment_id, student_id, submission_text, file_url)
+        VALUES ($1, $2, $3, $4) RETURNING *`;
+    const result = await pool.query(query, [assignmentId, studentId, submissionText, fileUrl]);
     return result.rows[0];
 };
 

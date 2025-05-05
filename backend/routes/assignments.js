@@ -1,6 +1,13 @@
 const express = require('express');
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
-const { createAssignment, getAssignmentsByCourse, getAssignmentById, updateAssignment, deleteAssignment } = require('../models/assignment');
+const {
+    createAssignment,
+    getAssignmentsByCourse,
+    getAssignmentsGroupedByWeek,
+    getAssignmentById,
+    updateAssignment,
+    deleteAssignment
+} = require('../models/assignment');
 const { logger } = require('../utils/logger');
 
 const router = express.Router();
@@ -11,16 +18,40 @@ const router = express.Router();
  * Route: /api/assignments/create
  */
 router.post('/create', authenticateToken, authorizeRoles('teacher'), async (req, res) => {
-    const { courseId, title, description, dueDate } = req.body;
-    const teacherId = req.user.id; // Extracted from JWT
+    const {
+        courseId, title, description, dueDate,
+        weekLabel, allowFile, allowText, fileRequired, textRequired
+    } = req.body;
+
+    const teacherId = req.user.id;
 
     try {
-        const assignment = await createAssignment(courseId, title, description, dueDate, teacherId);
+        const assignment = await createAssignment(
+            courseId, title, description, dueDate, teacherId,
+            weekLabel, allowFile, allowText, fileRequired, textRequired
+        );
         logger.info(`Assignment created: ${title} by Teacher ID: ${teacherId}`);
         res.status(201).json({ message: 'Assignment created successfully', assignment });
     } catch (error) {
         logger.error(`Error creating assignment: ${error.message}`);
         res.status(500).json({ message: 'Error creating assignment', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Get assignments grouped by week for course sections
+ * Method: GET
+ * Route: /api/assignments/course/:courseId/sections
+ */
+router.get('/course/:courseId/sections', authenticateToken, async (req, res) => {
+    const courseId = req.params.courseId;
+
+    try {
+        const result = await getAssignmentsGroupedByWeek(courseId);
+        res.json(result);
+    } catch (error) {
+        logger.error(`Error fetching assignment sections: ${error.message}`);
+        res.status(500).json({ message: 'Error fetching assignment sections', error: error.message });
     }
 });
 

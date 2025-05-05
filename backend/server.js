@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const connectMongoDB = require('./config/mongoConfig');
 const pool = require('./config/postgreConfig');
+const path = require('path');
 
 const aiRoutes = require('./routes/ai');
 const authRoutes = require('./routes/auth');
@@ -25,6 +26,7 @@ app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/assignments', assignmentSubmissionRoutes);
 app.use('/api/content', courseContentRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

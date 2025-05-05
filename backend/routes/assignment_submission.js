@@ -3,6 +3,19 @@ const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
 const { submitAssignment, getSubmissionsByAssignment, getSubmissionById, gradeAssignment } = require('../models/assignment_submission');
 const { getAssignmentById } = require('../models/assignment');
 const { logger } = require('../utils/logger');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/'),
+    filename: (req, file, cb) => {
+        const uniqueName = `${Date.now()}-${file.originalname}`;
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({ storage });
+
 
 const router = express.Router();
 
@@ -11,7 +24,8 @@ const router = express.Router();
  * Method: POST
  * Route: /api/assignments/submit
  */
-router.post('/submit', authenticateToken, authorizeRoles('student'), async (req, res) => {
+router.post('/submit', authenticateToken, authorizeRoles('student'), upload.single('file'), async (req, res) => {
+    const fileUrl = req.file ? req.file.path : null;
     const { assignmentId, submissionText } = req.body;
     const studentId = req.user.id; // Extracted from JWT
 
@@ -23,7 +37,7 @@ router.post('/submit', authenticateToken, authorizeRoles('student'), async (req,
         }
 
         // Submit assignment
-        const submission = await submitAssignment(assignmentId, studentId, submissionText);
+        const submission = await submitAssignment(assignmentId, studentId, submissionText, fileUrl);
         logger.info(`Student ${studentId} submitted assignment ${assignmentId}`);
         res.status(201).json({ message: 'Assignment submitted successfully', submission });
     } catch (error) {
