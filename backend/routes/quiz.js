@@ -7,9 +7,10 @@ const {
     getQuizWithQuestions
 } = require('../models/quiz');
 const { logger } = require('../utils/logger');
+const { OpenAI } = require('openai');
 
 const router = express.Router();
-
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 /**
  * 🔹 Create a new quiz (Teachers Only)
  * POST /api/quizzes/create
@@ -17,7 +18,7 @@ const router = express.Router();
 router.post('/create', authenticateToken, authorizeRoles('teacher'), async (req, res) => {
     const {
         courseId, title, description, weekLabel, dueDate,
-        allowMultipleAttempts, timeLimit, questions
+        allowMultipleAttempts, timeLimit, questions = []
     } = req.body;
 
     const teacherId = req.user.id;
@@ -32,7 +33,8 @@ router.post('/create', authenticateToken, authorizeRoles('teacher'), async (req,
                 q.questionType,
                 q.options || null,
                 q.correctAnswer || null,
-                q.points || 0);
+                q.points || 0
+            );
         }
 
         logger.info(`Quiz created: ${title} by Teacher ID: ${teacherId}`);
@@ -40,6 +42,75 @@ router.post('/create', authenticateToken, authorizeRoles('teacher'), async (req,
     } catch (error) {
         logger.error(`Error creating quiz: ${error.message}`);
         res.status(500).json({ message: 'Error creating quiz', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Create a quiz using OpenAI-generated questions
+ * POST /api/quizzes/create-with-ai
+ */
+router.post('/create-with-ai', authenticateToken, authorizeRoles('teacher'), async (req, res) => {
+    const {
+        courseId, title, description, weekLabel, dueDate,
+        allowMultipleAttempts, timeLimit,
+        topic, numQuestions = 5, questionType = 'multiple_choice', difficulty = 'medium'
+    } = req.body;
+
+    const teacherId = req.user.id;
+
+    const prompt = `
+Generate ${numQuestions} ${difficulty} ${questionType} questions on the topic "${topic}".
+Return them as a JSON array with this structure:
+[
+  {
+    "questionText": "...",
+    "questionType": "${questionType}",
+    "options": ["A", "B", "C", "D"], // Only for multiple_choice
+    "correctAnswer": "A",
+    "points": 5
+  }
+]`;
+
+    try {
+        // Step 1: Generate questions
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4.1-mini',
+            messages: [
+                { role: 'system', content: 'You are a helpful quiz generator for educators.' },
+                { role: 'user', content: prompt }
+            ],
+            temperature: 0.7
+        });
+
+        const aiContent = response.choices[0].message.content;
+        let questions;
+        try {
+            questions = JSON.parse(aiContent);
+        } catch (parseErr) {
+            return res.status(500).json({ message: 'Failed to parse AI response', raw: aiContent });
+        }
+
+        // Step 2: Create quiz
+        const quiz = await createQuiz(courseId, title, description, weekLabel, dueDate, allowMultipleAttempts, timeLimit, teacherId);
+
+        // Step 3: Save questions
+        for (const q of questions) {
+            await addQuizQuestion(
+                quiz.id,
+                q.questionText,
+                q.questionType,
+                q.options || null,
+                q.correctAnswer || null,
+                q.points || 0
+            );
+        }
+
+        logger.info(`AI-generated quiz created: ${title} by Teacher ID: ${teacherId}`);
+        res.status(201).json({ message: 'AI quiz created successfully', quiz, questions });
+
+    } catch (error) {
+        logger.error(`AI quiz creation failed: ${error.message}`);
+        res.status(500).json({ message: 'Failed to create AI quiz', error: error.message });
     }
 });
 
@@ -69,7 +140,7 @@ router.get('/:quizId', authenticateToken, async (req, res) => {
         res.json(data);
     } catch (error) {
         logger.error(`Error fetching quiz: ${error.message}`);
-        res.status(500).json({ message: 'Error fetching quiz' });
+        res.status(500).json({ message: 'Error fetching quiz', error: error.message });
     }
 });
 
