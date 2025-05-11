@@ -13,6 +13,8 @@ const enrollmentRoutes = require('./routes/enrollment');
 const assignmentRoutes = require('./routes/assignments');
 const assignmentSubmissionRoutes = require('./routes/assignment_submission');
 const courseContentRoutes = require('./routes/course_content');
+const quizRoutes = require('./routes/quiz');
+const quizSubmissionRoutes = require('./routes/quiz_submission');
 const app = express();
 app.use(bodyParser.json());
 
@@ -26,6 +28,8 @@ app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/assignments', assignmentSubmissionRoutes);
 app.use('/api/content', courseContentRoutes);
+app.use('/api/quizzes', quizRoutes);
+app.use('/api/quizzes', quizSubmissionRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;
