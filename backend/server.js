@@ -15,6 +15,8 @@ const assignmentSubmissionRoutes = require('./routes/assignment_submission');
 const courseContentRoutes = require('./routes/course_content');
 const quizRoutes = require('./routes/quiz');
 const quizSubmissionRoutes = require('./routes/quiz_submission');
+const dashboardRoutes = require('./routes/dashboard');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -31,6 +33,7 @@ app.use('/api/content', courseContentRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/quizzes', quizSubmissionRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/dashboard', dashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
