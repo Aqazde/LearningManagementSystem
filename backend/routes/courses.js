@@ -10,7 +10,7 @@ const router = express.Router();
  * Method: POST
  * Route: /api/courses/create
  */
-router.post('/create', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+router.post('/create', authenticateToken, authorizeRoles('admin', 'teacher'), async (req, res) => {
     const { title, description } = req.body;
     const adminId = req.user.id; // Extracted from JWT
 
