@@ -34,6 +34,8 @@ app.use('/api/quizzes', quizRoutes);
 app.use('/api/quizzes', quizSubmissionRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/dashboard', dashboardRoutes);
-
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
