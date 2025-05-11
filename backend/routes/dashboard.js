@@ -42,10 +42,11 @@ router.get('/student', authenticateToken, authorizeRoles('student'), async (req,
  */
 router.get('/teacher', authenticateToken, authorizeRoles('teacher'), async (req, res) => {
     const teacherId = req.user.id;
+    const courseId = req.query.courseId; // optional filter
 
     try {
-        const assignmentStats = await getAssignmentStatsForTeacher(teacherId);
-        const quizStats = await getQuizStatsForTeacher(teacherId);
+        const assignmentStats = await getAssignmentStatsForTeacher(teacherId, courseId);
+        const quizStats = await getQuizStatsForTeacher(teacherId, courseId);
 
         res.json({
             assignments: assignmentStats,

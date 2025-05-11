@@ -44,15 +44,22 @@ const getAverageScores = async (studentId) => {
 /**
  * 🔹 Average assignment grades per assignment for teacher's courses
  */
-const getAssignmentStatsForTeacher = async (teacherId) => {
-    const query = `
+const getAssignmentStatsForTeacher = async (teacherId, courseId = null) => {
+    let query = `
         SELECT a.title, a.course_id, AVG(s.grade) AS average_grade, COUNT(s.id) AS submissions
         FROM assignments a
         LEFT JOIN assignment_submissions s ON s.assignment_id = a.id
-        WHERE a.created_by = $1
-        GROUP BY a.id
-        ORDER BY a.course_id, a.id`;
-    const result = await pool.query(query, [teacherId]);
+        WHERE a.created_by = $1`;
+    const values = [teacherId];
+
+    if (courseId) {
+        query += ` AND a.course_id = $2`;
+        values.push(courseId);
+    }
+
+    query += ` GROUP BY a.id ORDER BY a.course_id, a.id`;
+
+    const result = await pool.query(query, values);
     return result.rows;
 };
 
