@@ -17,7 +17,7 @@ const router = express.Router();
  */
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
-    const role = req.body.role || 'student';
+    const role = 'guest'; // All new users are guests by default
 
     try {
         const existingUser = await findUserByEmail(email);
@@ -25,9 +25,8 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const user = await createUser(name, email, password, role || 'student');
-        logger.info(`User registered: ${email}`);
-
+        const user = await createUser(name, email, password, role);
+        logger.info(`Guest user registered: ${email}`);
         res.status(201).json({ message: 'User registered successfully', user });
     } catch (error) {
         logger.error(`Error registering user: ${error.message}`);
@@ -77,6 +76,8 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Error logging in', error: error.message });
     }
 });
+
+
 
 /**
  * 🔹 Refresh Access Token - POST /api/auth/refresh-token
