@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Admin Dashboard</h2>
+
+    <section>
+        <h3>Create New User</h3>
+        <input type="text" id="newName" placeholder="Full Name">
+        <input type="email" id="newEmail" placeholder="Email">
+        <input type="password" id="newPassword" placeholder="Password">
+        <select id="newRole">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button onclick="createUser()">Create User</button>
+    </section>
+
+    <hr>
+
+    <section>
+        <h3>All Users</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="userTableBody">
+            <!-- Users loaded dynamically via JS -->
+            </tbody>
+        </table>
+    </section>
+
+    <hr>
+
+    <section>
+        <h3>Manage Courses</h3>
+        <input type="text" id="courseTitle" placeholder="Course Title">
+        <input type="text" id="courseDescription" placeholder="Course Description">
+        <button onclick="createCourse()">Create Course</button>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th><th>Description</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="courseTableBody">
+            <!-- Courses will be populated here -->
+            </tbody>
+        </table>
+    </section>
+
+    <button onclick="logout()">Logout</button>
+    <p id="adminMessage"></p>
+</div>
+
+<script src="scripts/dashboard-admin.js"></script>
+</body>
+</html>

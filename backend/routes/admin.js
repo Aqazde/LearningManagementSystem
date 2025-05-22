@@ -1,5 +1,5 @@
 const express = require('express');
-const { findAllUsers, findUserById, updateUserRole, deleteUser } = require('../models/user');
+const { findAllUsers, findUserById, updateUserRole, deleteUser, createUser, findUserByEmail, updateUserPassword } = require('../models/user');
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
 const { logger } = require('../utils/logger');
 
