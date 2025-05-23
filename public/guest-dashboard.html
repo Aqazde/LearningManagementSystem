@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<% layout('layouts/main') -%>
 
-</body>
-</html>
+<div class="text-center py-12">
+    <h1 class="text-3xl font-bold mb-6">Добро пожаловать в AI LMS</h1>
+    <p class="text-xl mb-8">Платформа для обучения с искусственным интеллектом</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-3">Изучайте</h2>
+            <p>Доступ к сотням курсов по разным направлениям</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-3">Практикуйтесь</h2>
+            <p>Интерактивные задания и тесты с мгновенной проверкой</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-3">AI Ассистент</h2>
+            <p>Персональный помощник для ответов на вопросы</p>
+        </div>
+    </div>
+
+    <div class="space-x-4">
+        <a href="/register" class="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium">Зарегистрироваться</a>
+        <a href="/login" class="bg-white text-blue-500 px-6 py-3 rounded-lg font-medium border border-blue-500">Войти</a>
+    </div>
+</div>

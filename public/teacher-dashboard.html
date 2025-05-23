@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд учителя | LMS</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+<!-- Навбар (можно вынести в отдельный файл) -->
+<nav class="navbar">...</nav>
 
+<main class="container">
+    <h1 class="page-title">Дашборд учителя</h1>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h2 class="card-title">Мои курсы</h2>
+            <!-- Динамический список курсов -->
+            <div class="course-item">
+                <h3 class="course-title">Основы программирования</h3>
+                <p class="course-meta">5 студентов</p>
+                <a href="/courses/1/manage" class="btn btn-manage">Управление</a>
+            </div>
+            <a href="/courses/new" class="btn btn-primary">Создать курс</a>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Последние задания</h2>
+            <!-- Динамический список заданий -->
+            <div class="assignment-item">
+                <p class="assignment-title">Тестовое задание</p>
+                <p class="assignment-meta">Курс: Основы программирования</p>
+                <p class="assignment-meta">3 работы сдано</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">...</footer>
 </body>
 </html>
