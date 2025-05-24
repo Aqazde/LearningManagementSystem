@@ -1,0 +1,58 @@
+<!-- public/teacher-quiz-create.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Quiz | LMS</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script defer src="scripts/quiz-create.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Create a New Quiz</h1>
+
+    <div class="tabs">
+        <button id="manualTab" class="active">Manual</button>
+        <button id="aiTab">AI Assistance</button>
+    </div>
+
+    <form id="quizForm">
+        <input type="text" id="title" placeholder="Quiz Title" required>
+        <textarea id="description" placeholder="Quiz Description" rows="3"></textarea>
+        <input type="number" id="weekLabel" placeholder="Week #" required>
+        <input type="date" id="dueDate" required>
+        <input type="number" id="timeLimit" placeholder="Time Limit (mins)" required>
+        <label>
+            <input type="checkbox" id="allowMultipleAttempts">
+            Allow Multiple Attempts
+        </label>
+
+        <select id="courseSelect" required>
+            <option value="">-- Select Course --</option>
+        </select>
+
+        <div id="manualSection">
+            <h3>Questions</h3>
+            <div id="questionsContainer"></div>
+            <button type="button" id="addQuestionBtn">+ Add Question</button>
+        </div>
+
+        <div id="aiSection" class="hidden">
+            <input type="text" id="topic" placeholder="Topic">
+            <input type="number" id="numQuestions" placeholder="Number of Questions" value="5">
+            <select id="questionType">
+                <option value="multiple_choice">Multiple Choice</option>
+            </select>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+
+        <button type="submit">Create Quiz</button>
+        <p id="message"></p>
+    </form>
+</div>
+</body>
+</html>
