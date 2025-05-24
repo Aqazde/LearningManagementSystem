@@ -85,7 +85,7 @@ async function fetchQuizzes() {
         quizzes.forEach(q => {
             const li = document.createElement('li');
             li.innerHTML = `<strong>${q.title}</strong> - Due: ${new Date(q.due_date).toLocaleDateString()} <br>
-                            <a href="quiz-attempt.html?id=${q.id}" class="text-blue-600">Take Quiz</a>`;
+                            <a href="quiz-preview.html?id=${q.id}" class="text-blue-600">Take Quiz</a>`;
             quizList.appendChild(li);
         });
     } catch (err) {
