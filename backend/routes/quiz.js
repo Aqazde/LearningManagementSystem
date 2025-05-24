@@ -4,7 +4,8 @@ const {
     createQuiz,
     addQuizQuestion,
     getQuizzesByCourse,
-    getQuizWithQuestions
+    getQuizWithQuestions,
+    getQuizById
 } = require('../models/quiz');
 const { logger } = require('../utils/logger');
 const { OpenAI } = require('openai');
@@ -141,6 +142,30 @@ router.get('/:quizId', authenticateToken, async (req, res) => {
     } catch (error) {
         logger.error(`Error fetching quiz: ${error.message}`);
         res.status(500).json({ message: 'Error fetching quiz', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Quiz Metadata Only (for student preview)
+ * GET /api/quizzes/:quizId/metadata
+ */
+router.get('/:quizId/metadata', authenticateToken, async (req, res) => {
+    try {
+        const quiz = await getQuizById(req.params.quizId);
+        if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
+
+        res.json({
+            id: quiz.id,
+            title: quiz.title,
+            description: quiz.description,
+            course_id: quiz.course_id,
+            time_limit: quiz.time_limit,
+            allow_multiple_attempts: quiz.allow_multiple_attempts,
+            due_date: quiz.due_date
+        });
+    } catch (error) {
+        logger.error(`Error fetching quiz metadata: ${error.message}`);
+        res.status(500).json({ message: 'Error fetching quiz metadata' });
     }
 });
 
