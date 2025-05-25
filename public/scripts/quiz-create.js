@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load teacher's courses
     async function loadCourses() {
         try {
-            const res = await fetch("/api/teacher/courses", {
+            const res = await fetch("/api/courses/my-teacher-courses", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const courses = await res.json();
