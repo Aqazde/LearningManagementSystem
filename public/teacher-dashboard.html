@@ -1,42 +1,53 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дашборд учителя | LMS</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Teacher Dashboard | LMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body>
-<!-- Навбар (можно вынести в отдельный файл) -->
-<nav class="navbar">...</nav>
+<body class="bg-gray-100">
 
-<main class="container">
-    <h1 class="page-title">Дашборд учителя</h1>
-
-    <div class="dashboard-grid">
-        <div class="card">
-            <h2 class="card-title">Мои курсы</h2>
-            <!-- Динамический список курсов -->
-            <div class="course-item">
-                <h3 class="course-title">Основы программирования</h3>
-                <p class="course-meta">5 студентов</p>
-                <a href="/courses/1/manage" class="btn btn-manage">Управление</a>
-            </div>
-            <a href="/courses/new" class="btn btn-primary">Создать курс</a>
-        </div>
-
-        <div class="card">
-            <h2 class="card-title">Последние задания</h2>
-            <!-- Динамический список заданий -->
-            <div class="assignment-item">
-                <p class="assignment-title">Тестовое задание</p>
-                <p class="assignment-meta">Курс: Основы программирования</p>
-                <p class="assignment-meta">3 работы сдано</p>
-            </div>
+<!-- Top Navigation -->
+<nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="/" class="text-xl font-bold">AI LMS</a>
+        <div>
+            <span id="teacherName" class="mr-4">Welcome, Teacher</span>
+            <button onclick="logout()" class="bg-blue-700 px-3 py-1 rounded">Logout</button>
         </div>
     </div>
+</nav>
+
+<!-- Dashboard Content -->
+<main class="container mx-auto p-4">
+
+    <!-- Course List -->
+    <h1 class="text-2xl font-bold mb-6">My Courses</h1>
+    <div id="coursesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Courses will be injected here -->
+    </div>
+
+    <!-- Create Content Section -->
+    <h2 class="text-xl font-bold mt-10 mb-4">Create Course Content</h2>
+    <form id="contentForm" class="bg-white p-4 shadow rounded space-y-4 max-w-xl">
+        <select id="courseSelect" class="w-full border p-2" required>
+            <option value="">-- Select Course --</option>
+        </select>
+        <input type="text" id="title" placeholder="Content Title" class="w-full border p-2" required>
+        <textarea id="description" placeholder="Content Description" class="w-full border p-2"></textarea>
+        <input type="url" id="contentUrl" placeholder="Content URL (PDF, YouTube, etc.)" class="w-full border p-2" required>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create</button>
+        <p id="contentMessage" class="text-sm text-red-600"></p>
+    </form>
+
+    <!-- Create Quiz -->
+    <h2 class="text-xl font-bold mt-10 mb-4">Create Quiz</h2>
+    <a href="teacher-quiz-create.html" class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">➕ Go to Quiz Builder</a>
+
+    <p id="dashboardMessage" class="text-red-600 mt-6"></p>
 </main>
 
-<footer class="footer">...</footer>
+<script src="scripts/dashboard-teacher.js"></script>
 </body>
 </html>
