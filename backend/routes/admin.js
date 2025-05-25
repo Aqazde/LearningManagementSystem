@@ -1,9 +1,11 @@
 const express = require('express');
 const { findAllUsers, findUserById, updateUserRole, deleteUser, createUser, findUserByEmail, updateUserPassword } = require('../models/user');
+const { assignTeacherToCourse, getTeachersByCourse, removeTeacherFromCourse } = require('../models/course_teacher');
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
 const { logger } = require('../utils/logger');
 
 const router = express.Router();
+const pool = require('../config/postgreConfig');
 
 /**
  * 🔹 Get All Users (Admin Only) - GET /api/admin/users
@@ -87,6 +89,76 @@ router.delete('/users/:id', authenticateToken, authorizeRoles('admin'), async (r
     } catch (error) {
         logger.error(`Error deleting user: ${error.message}`);
         res.status(500).json({ message: 'Error deleting user' });
+    }
+});
+
+/**
+ * 🔹 Assign teacher to a course (Admin Only)
+ * Method: POST
+ * Route: /api/admin/assign-teacher
+ */
+router.post('/assign-teacher', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+    const { teacherId, courseUuid } = req.body;
+
+    if (!teacherId || !courseUuid) {
+        return res.status(400).json({ message: 'Missing teacherId or courseUuid' });
+    }
+
+    try {
+        const teacher = await findUserById(teacherId);
+        if (!teacher || teacher.role !== 'teacher') {
+            return res.status(400).json({ message: 'Invalid teacher ID or user is not a teacher' });
+        }
+
+        const courseCheck = await pool.query(`SELECT * FROM courses WHERE uuid = $1`, [courseUuid]);
+        if (courseCheck.rowCount === 0) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        const result = await assignTeacherToCourse(teacherId, courseUuid);
+        if (!result) {
+            return res.status(409).json({ message: 'Teacher already assigned' });
+        }
+
+        res.json({ message: 'Teacher assigned to course', result });
+
+    } catch (error) {
+        logger.error(`Error assigning teacher: ${error.message}`);
+        res.status(500).json({ message: 'Error assigning teacher', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Remove teacher from a course (Admin Only)
+ * Method: DELETE
+ * Route: /api/admin/remove-teacher
+ */
+router.delete('/remove-teacher', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+    const { teacherId, courseUuid } = req.body;
+
+    try {
+        await removeTeacherFromCourse(teacherId, courseUuid);
+        res.json({ message: 'Teacher removed from course' });
+    } catch (error) {
+        logger.error(`Error removing teacher: ${error.message}`);
+        res.status(500).json({ message: 'Error removing teacher', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Get All Teachers for a Course (Admin Only)
+ * Method: GET
+ * Route: /api/admin/course/:courseUuid/teachers
+ */
+router.get('/course/:courseUuid/teachers', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+    const { courseUuid } = req.params;
+
+    try {
+        const teachers = await getTeachersByCourse(courseUuid);
+        res.json(teachers);
+    } catch (error) {
+        logger.error(`Error fetching teachers for course ${courseUuid}: ${error.message}`);
+        res.status(500).json({ message: 'Error fetching teachers', error: error.message });
     }
 });
 
