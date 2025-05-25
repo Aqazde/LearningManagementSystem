@@ -50,10 +50,23 @@ const deleteCourse = async (courseId) => {
     return result.rows[0];
 };
 
+/**
+ * 🔹 Get all courses assigned to a teacher
+ */
+const getCoursesByTeacher = async (teacherId) => {
+    const result = await pool.query(`
+        SELECT c.* FROM courses c
+        JOIN course_teachers ct ON ct.course_uuid = c.uuid
+        WHERE ct.teacher_id = $1
+    `, [teacherId]);
+    return result.rows;
+};
+
 module.exports = {
     createCourse,
     getAllCourses,
     getCourseById,
     updateCourse,
-    deleteCourse
+    deleteCourse,
+    getCoursesByTeacher
 };
