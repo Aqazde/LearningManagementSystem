@@ -1,6 +1,6 @@
 const express = require('express');
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
-const { createCourse, getAllCourses, getCourseById, updateCourse, deleteCourse } = require('../models/course');
+const { createCourse, getAllCourses, getCourseById, updateCourse, deleteCourse, getCoursesByTeacher } = require('../models/course');
 const { logger } = require('../utils/logger');
 
 const router = express.Router();
@@ -36,6 +36,21 @@ router.get('/', authenticateToken, async (req, res) => {
     } catch (error) {
         logger.error(`Error fetching courses: ${error.message}`);
         res.status(500).json({ message: 'Error fetching courses', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Get courses assigned to logged-in teacher
+ * Method: GET
+ * Route: /api/courses/my-teacher-courses
+ */
+router.get('/my-teacher-courses', authenticateToken, authorizeRoles('teacher'), async (req, res) => {
+    try {
+        const courses = await getCoursesByTeacher(req.user.id);
+        res.json(courses);
+    } catch (error) {
+        logger.error(`Error fetching teacher's courses: ${error.message}`);
+        res.status(500).json({ message: 'Error fetching teacher courses' });
     }
 });
 
