@@ -2,6 +2,8 @@ const express = require('express');
 const { findAllUsers, findUserById, updateUserRole, deleteUser, createUser, findUserByEmail, updateUserPassword } = require('../models/user');
 const { assignTeacherToCourse, getTeachersByCourse, removeTeacherFromCourse } = require('../models/course_teacher');
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
+const { enrollStudent, unenrollStudent } = require('../models/enrollment');
+const { getCourseById } = require('../models/course');
 const { logger } = require('../utils/logger');
 
 const router = express.Router();
@@ -159,6 +161,81 @@ router.get('/course/:courseUuid/teachers', authenticateToken, authorizeRoles('ad
     } catch (error) {
         logger.error(`Error fetching teachers for course ${courseUuid}: ${error.message}`);
         res.status(500).json({ message: 'Error fetching teachers', error: error.message });
+    }
+});
+
+router.post('/enroll-student', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+    const { studentId, courseId } = req.body;
+
+    if (!studentId || !courseId) {
+        return res.status(400).json({ message: 'Missing studentId or courseId' });
+    }
+
+    try {
+        const student = await findUserById(studentId);
+        if (!student || student.role !== 'student') {
+            return res.status(400).json({ message: 'Invalid student ID or user is not a student' });
+        }
+
+        const course = await getCourseById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        const enrollment = await enrollStudent(studentId, courseId);
+        res.status(201).json({ message: 'Student enrolled successfully', enrollment });
+    } catch (error) {
+        logger.error(`Admin error enrolling student: ${error.message}`);
+        res.status(500).json({ message: 'Error enrolling student', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Get All Students Enrolled in a Course (Admin Only)
+ * Method: GET
+ * Route: /api/admin/course/:id/students
+ */
+router.get('/course/:id/students', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+    const courseId = req.params.id;
+
+    try {
+        const result = await pool.query(`
+            SELECT u.id, u.name, u.email
+            FROM enrollments e
+            JOIN users u ON e.user_id = u.id
+            WHERE e.course_id = $1
+        `, [courseId]);
+
+        res.json(result.rows);
+    } catch (error) {
+        logger.error(`Error fetching students for course ${courseId}: ${error.message}`);
+        res.status(500).json({ message: 'Error fetching enrolled students', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Unenroll a Student from a Course (Admin Only)
+ * Method: DELETE
+ * Route: /api/admin/unenroll-student
+ * Body: { studentId, courseId }
+ */
+router.delete('/unenroll-student', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+    const { studentId, courseId } = req.body;
+
+    if (!studentId || !courseId) {
+        return res.status(400).json({ message: 'Missing studentId or courseId' });
+    }
+
+    try {
+        const result = await unenrollStudent(studentId, courseId);
+        if (!result) {
+            return res.status(400).json({ message: 'Student was not enrolled in this course' });
+        }
+
+        res.json({ message: 'Student unenrolled successfully' });
+    } catch (error) {
+        logger.error(`Error unenrolling student: ${error.message}`);
+        res.status(500).json({ message: 'Error unenrolling student', error: error.message });
     }
 });
 
