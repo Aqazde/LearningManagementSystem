@@ -10,6 +10,10 @@ if (!token) {
 window.onload = () => {
     fetchUsers();
     fetchCourses();
+    loadUsersForRole('teacher', 'teacherSelect');
+    loadUsersForRole('student', 'studentSelect');
+    loadCoursesForSelect('teacherCourseSelect');
+    loadCoursesForSelect('studentCourseSelect');
 };
 
 // Fetch all users
@@ -192,7 +196,92 @@ async function deleteCourse(courseId) {
     }
 }
 
+async function loadUsersForRole(role, selectId) {
+    try {
+        const res = await fetch('/api/admin/users', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const users = await res.json();
+        const filtered = users.filter(u => u.role === role);
+        const select = document.getElementById(selectId);
+        select.innerHTML = '';
+        filtered.forEach(u => {
+            const opt = document.createElement('option');
+            opt.value = u.id;
+            opt.textContent = `${u.name} (${u.email})`;
+            select.appendChild(opt);
+        });
+    } catch (err) {
+        console.error(`Error loading ${role}s:`, err);
+    }
+}
 
+async function loadCoursesForSelect(selectId) {
+    try {
+        const res = await fetch('/api/courses', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const courses = await res.json();
+        const select = document.getElementById(selectId);
+        select.innerHTML = '';
+        courses.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id; // ⚠️ ID, not UUID — adjust if needed
+            opt.textContent = `${c.title}`;
+            opt.dataset.uuid = c.uuid;
+            select.appendChild(opt);
+        });
+    } catch (err) {
+        console.error('Error loading courses:', err);
+    }
+}
+
+// 🔹 Assign Teacher
+async function assignTeacherToCourse() {
+    const teacherId = document.getElementById('teacherSelect').value;
+    const courseSelect = document.getElementById('teacherCourseSelect');
+    const courseUuid = courseSelect.options[courseSelect.selectedIndex].dataset.uuid;
+
+    try {
+        const res = await fetch('/api/admin/assign-teacher', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ teacherId, courseUuid })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        alert('Teacher assigned successfully!');
+    } catch (err) {
+        alert('Failed to assign teacher: ' + err.message);
+    }
+}
+
+// 🔹 Enroll Student
+async function enrollStudentToCourse() {
+    const studentId = document.getElementById('studentSelect').value;
+    const courseId = document.getElementById('studentCourseSelect').value;
+
+    try {
+        const res = await fetch('/api/admin/enroll-student', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ studentId, courseId })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        alert('Student enrolled successfully!');
+    } catch (err) {
+        alert('Failed to enroll student: ' + err.message);
+    }
+}
 
 // Logout
 function logout() {
