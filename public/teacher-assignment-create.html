@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Assignment | LMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+<nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between">
+        <a href="teacher-dashboard.html" class="text-xl font-bold">⬅ Dashboard</a>
+        <button onclick="logout()" class="bg-blue-700 px-3 py-1 rounded">Logout</button>
+    </div>
+</nav>
+
+<main class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">📘 Create Assignment</h1>
+
+    <form id="assignmentForm" class="bg-white p-6 rounded shadow space-y-4 max-w-xl">
+        <select id="courseSelect" class="w-full border p-2" required>
+            <option value="">-- Select Course --</option>
+        </select>
+
+        <input type="text" id="title" class="w-full border p-2" placeholder="Assignment Title" required />
+        <textarea id="description" class="w-full border p-2" rows="3" placeholder="Description"></textarea>
+        <input type="date" id="dueDate" class="w-full border p-2" required />
+        <input type="number" id="weekLabel" class="w-full border p-2" placeholder="Week #" required />
+
+        <div class="flex gap-4">
+            <label><input type="checkbox" id="allowFile" checked /> Allow File</label>
+            <label><input type="checkbox" id="fileRequired" /> File Required</label>
+        </div>
+
+        <div class="flex gap-4">
+            <label><input type="checkbox" id="allowText" checked /> Allow Text</label>
+            <label><input type="checkbox" id="textRequired" /> Text Required</label>
+        </div>
+
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Create</button>
+        <p id="formMessage" class="text-red-600"></p>
+    </form>
+</main>
+
+<script src="scripts/teacher-assignment-create.js"></script>
+</body>
+</html>
