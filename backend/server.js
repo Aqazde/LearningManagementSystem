@@ -36,6 +36,8 @@ app.use('/api/quizzes', quizSubmissionRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/dashboard', dashboardRoutes);
 
+app.use('/api/plagiarism', require('./routes/plagiarism'));
+
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Redirect all unmatched routes to index.html (for SPA-like routing)

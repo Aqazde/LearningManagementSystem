@@ -14,3 +14,24 @@ const logger = winston.createLogger({
 });
 
 module.exports = { logger };
+
+
+/*
+{
+  "name": "John Teacher",
+  "email": "teacher@example.com",
+  "password": "Test1234",
+  "role": "teacher"
+}
+
+{
+  "name": "Jane Student",
+  "email": "student@example.com",
+  "password": "Test1234",
+  "role": "student"
+}
+
+
+"email": "admin@example.com",
+   "password": "securepassword",
+ */
