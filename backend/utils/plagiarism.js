@@ -2,6 +2,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const pdf = require('pdf-parse');
 const path = require('path');
+const mammoth = require('mammoth');
 
 async function extractTextFromFile(filePath) {
     if (filePath.endsWith('.pdf')) {
@@ -15,6 +16,10 @@ async function extractTextFromFile(filePath) {
 }
 
 async function runPlagiarismCheck(targetText, otherTexts) {
+    if (!targetText.trim()) {
+        throw new Error("Target submission has no extractable text.");
+    }
+
     return new Promise((resolve, reject) => {
         const python = spawn('python', [path.join(__dirname, '../plagiarism_check.py')]);
         const input = JSON.stringify({ submission: targetText, others: otherTexts });

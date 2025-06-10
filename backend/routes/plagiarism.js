@@ -27,6 +27,10 @@ router.post('/check/:submissionId', authenticateToken, authorizeRoles('teacher')
             targetText = await extractTextFromFile(submission.file_url);
         }
 
+        if (!targetText || targetText.trim() === '') {
+    return res.status(400).json({ message: "Uploaded file contains no readable text." });
+}
+
         const otherSubmissionsRes = await pool.query(
             `SELECT id, student_id, submission_text, file_url FROM assignment_submissions
              WHERE assignment_id = $1 AND student_id != $2`,
