@@ -97,6 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <div class="font-semibold">${sub.student_name}</div>
                                 <div>${filePart} | ${gradePart}</div>
                                 ${sub.feedback ? `<div class="text-sm italic mt-1">📝 ${sub.feedback}</div>` : ""}
+                                <button onclick="checkPlagiarism('${sub.id}')" class="text-blue-600 hover:underline mt-2">Check Plagiarism</button>
+                                <div id="plagiarismResult_${sub.id}" class="text-sm text-gray-600 mt-1"></div>
                             </div>
                         `;
                         list.appendChild(li);
@@ -112,6 +114,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+async function checkPlagiarism(submissionId) {
+    const token = localStorage.getItem('accessToken');
+    const resultDiv = document.getElementById(`plagiarismResult_${submissionId}`);
+    resultDiv.textContent = "🔍 Checking for plagiarism...";
+
+    try {
+        const response = await fetch(`/api/plagiarism/check/${submissionId}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            const msg = data.message || 'Unknown error';
+            resultDiv.textContent = `❌ Error: ${msg}`;
+
+            if (msg.includes('no readable text')) {
+                resultDiv.textContent += ' 🧐 Make sure the file is not empty and contains readable text.';
+            }
+
+            return;
+        }
+
+        const matches = data.matches;
+
+        if (!Array.isArray(matches) || matches.length === 0) {
+            resultDiv.textContent = "✅ No similar submissions found.";
+            return;
+        }
+
+        resultDiv.innerHTML = matches.map(match => {
+            const similarityPercent = (match.similarity * 100).toFixed(1);
+            let level;
+
+            if (match.similarity >= 0.85) level = "🔴 High";
+            else if (match.similarity >= 0.6) level = "🟠 Medium";
+            else level = "🟢 Low";
+
+            return `👤 Student ID: ${match.studentId} — Similarity: ${similarityPercent}% (${level})`;
+        }).join('<br>');
+
+    } catch (err) {
+        console.error(err);
+        resultDiv.textContent = '❌ Failed to fetch results';
+    }
+}
 
 function logout() {
     localStorage.clear();
