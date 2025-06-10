@@ -1,0 +1,37 @@
+<!-- public/quiz-preview.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Preview | LMS</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script defer src="scripts/quiz-preview.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Quiz Preview</h1>
+
+  <div id="quizDetails" class="hidden">
+    <h2 id="quizTitle"></h2>
+    <p id="quizDescription"></p>
+    <p><strong>Time Limit:</strong> <span id="quizTime"></span> minutes</p>
+    <p><strong>Due Date:</strong> <span id="quizDueDate"></span></p>
+    <p><strong>Attempts:</strong> <span id="quizAttempts"></span></p>
+
+    <button id="startQuizBtn">Take Quiz</button>
+  </div>
+
+  <div id="confirmModal" class="modal hidden">
+    <div class="modal-content">
+      <p>Are you sure you want to start this quiz? Time will start immediately and you may not get another attempt.</p>
+      <div class="modal-actions">
+        <button id="confirmStartBtn" class="btn btn-primary">Yes, Start</button>
+        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <p id="message" class="error"></p>
+</div>
+</body>
+</html>

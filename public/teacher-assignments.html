@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Assignments | LMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+
+<nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="teacher-dashboard.html" class="text-xl font-bold">AI LMS</a>
+        <div>
+            <button onclick="logout()" class="bg-blue-700 px-3 py-1 rounded">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-6">📘 My Assignments</h1>
+
+    <section class="mb-8">
+        <h2 class="text-xl font-semibold mb-2">Create New Assignment</h2>
+        <form id="assignmentForm" class="bg-white p-4 rounded shadow space-y-3">
+            <select id="courseSelect" class="w-full border p-2" required></select>
+            <input type="text" id="title" placeholder="Title" class="w-full border p-2" required />
+            <textarea id="description" placeholder="Description" class="w-full border p-2"></textarea>
+            <input type="date" id="dueDate" class="w-full border p-2" required />
+            <input type="number" id="weekLabel" placeholder="Week #" class="w-full border p-2" required />
+
+            <div class="flex gap-4">
+                <label><input type="checkbox" id="allowFile"> Allow File</label>
+                <label><input type="checkbox" id="allowText"> Allow Text</label>
+            </div>
+            <div class="flex gap-4">
+                <label><input type="checkbox" id="fileRequired"> File Required</label>
+                <label><input type="checkbox" id="textRequired"> Text Required</label>
+            </div>
+
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create</button>
+            <p id="assignmentMessage" class="text-sm text-red-600"></p>
+        </form>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold mb-3">Existing Assignments</h2>
+        <div id="assignmentList" class="space-y-4"></div>
+    </section>
+</main>
+
+<script src="scripts/teacher-assignments.js"></script>
+</body>
+</html>

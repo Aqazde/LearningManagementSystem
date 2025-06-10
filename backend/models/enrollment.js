@@ -4,7 +4,10 @@ const pool = require('../config/postgreConfig');
  * 🔹 Enroll a student in a course
  */
 const enrollStudent = async (userId, courseId) => {
-    const query = `INSERT INTO enrollments (user_id, course_id) VALUES ($1, $2) RETURNING *`;
+    const query = `INSERT INTO enrollments (user_id, course_id)
+                   VALUES ($1, $2)
+                   ON CONFLICT (user_id, course_id) DO NOTHING
+                   RETURNING *`;
     try {
         const result = await pool.query(query, [userId, courseId]);
         return result.rows[0];

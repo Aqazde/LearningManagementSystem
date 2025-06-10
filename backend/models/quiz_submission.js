@@ -3,12 +3,12 @@ const pool = require('../config/postgreConfig');
 /**
  * 🔹 Submit a quiz (initial metadata)
  */
-const createQuizSubmission = async (quizId, studentId, startTime) => {
+const createQuizSubmission = async (quizId, studentId, startTime, attemptNumber = 1) => {
     const query = `
-        INSERT INTO quiz_submissions (quiz_id, student_id, start_time)
-        VALUES ($1, $2, $3)
+        INSERT INTO quiz_submissions (quiz_id, student_id, start_time, attempt_number)
+        VALUES ($1, $2, $3, $4)
         RETURNING *`;
-    const values = [quizId, studentId, startTime];
+    const values = [quizId, studentId, startTime, attemptNumber];
     const result = await pool.query(query, values);
     return result.rows[0];
 };
@@ -66,10 +66,19 @@ const getAnswersBySubmission = async (submissionId) => {
     return result.rows;
 };
 
+const hasStudentAttempted = async (quizId, studentId) => {
+    const result = await pool.query(
+        `SELECT * FROM quiz_submissions WHERE quiz_id = $1 AND student_id = $2`,
+        [quizId, studentId]
+    );
+    return result.rows.length > 0;
+};
+
 module.exports = {
     createQuizSubmission,
     saveQuizAnswer,
     finalizeQuizSubmission,
     getSubmissionsByQuiz,
-    getAnswersBySubmission
+    getAnswersBySubmission,
+    hasStudentAttempted
 };

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Student Submissions | LMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+<nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between">
+        <a href="teacher-dashboard.html" class="text-xl font-bold">⬅ Back to Dashboard</a>
+        <button onclick="logout()" class="bg-blue-700 px-3 py-1 rounded">Logout</button>
+    </div>
+</nav>
+
+<main class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">📊 Student Submissions</h1>
+
+    <section>
+        <h2 class="text-xl font-semibold mb-2">Quiz Submissions</h2>
+        <div id="quizResultsContainer" class="bg-white p-4 shadow rounded mb-8"></div>
+    </section>
+
+    <section>
+        <h2 class="text-xl font-semibold mb-2">Assignment Submissions</h2>
+        <div id="assignmentResultsContainer" class="bg-white p-4 shadow rounded"></div>
+    </section>
+
+    <p id="resultsMessage" class="text-red-600 mt-4"></p>
+</main>
+
+<script src="scripts/teacher-submissions.js"></script>
+</body>
+</html>

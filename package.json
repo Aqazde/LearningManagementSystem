@@ -4,15 +4,24 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.9.1",
+    "moment": "^2.30.1",
     "mongoose": "^8.8.3",
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.0",
     "openai": "^4.98.0",
+    "pdf-parse": "^1.1.1",
     "pg": "^8.13.1",
     "winston": "^3.17.0"
+  },
+  "scripts": {
+    "start": "node backend/server.js",
+    "migrate": "psql -U postgres -d lms_db -f migrations/20250610_create_tables.sql",
+    "seed": "node seeds/seed_users.js"
   }
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Course Detail | LMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+<nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="student-dashboard.html" class="text-xl font-bold">← Back to Dashboard</a>
+        <button onclick="logout()" class="bg-blue-700 px-3 py-1 rounded">Logout</button>
+    </div>
+</nav>
+
+<main class="container mx-auto p-6">
+    <h1 id="courseTitle" class="text-2xl font-bold mb-2">Loading Course...</h1>
+    <p id="courseDescription" class="text-gray-700 mb-6"></p>
+
+    <h2 class="text-xl font-semibold mb-2">Course Content</h2>
+    <ul id="contentList" class="mb-6 space-y-2">
+        <!-- List of course content -->
+    </ul>
+
+    <h2 class="text-xl font-semibold mb-2">Assignments</h2>
+    <ul id="assignmentList" class="mb-6 space-y-2">
+        <!-- List of assignments -->
+    </ul>
+
+    <h2 class="text-xl font-semibold mb-2">Quizzes</h2>
+    <ul id="quizList" class="space-y-2">
+        <!-- List of quizzes -->
+    </ul>
+
+    <p id="courseMessage" class="text-red-600 mt-4"></p>
+</main>
+
+<script src="scripts/course.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LMS Login/Register</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Welcome to the Learning Management System</h1>
+
+    <div class="tabs">
+        <button id="loginTab" class="active">Login</button>
+        <button id="registerTab">Register</button>
+    </div>
+
+    <div id="loginForm" class="form">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="registerForm" class="form hidden">
+        <input type="text" id="registerName" placeholder="Full Name" required>
+        <input type="email" id="registerEmail" placeholder="Email" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+
+        <button onclick="register()">Register</button>
+    </div>
+
+    <p id="message"></p>
+</div>
+
+<script src="scripts/index.js"></script>
+</body>
+</html>

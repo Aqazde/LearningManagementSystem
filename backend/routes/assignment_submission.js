@@ -5,6 +5,7 @@ const { getAssignmentById } = require('../models/assignment');
 const { logger } = require('../utils/logger');
 const multer = require('multer');
 const path = require('path');
+const moment = require('moment');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/'),
@@ -27,19 +28,25 @@ const router = express.Router();
 router.post('/submit', authenticateToken, authorizeRoles('student'), upload.single('file'), async (req, res) => {
     const fileUrl = req.file ? req.file.path : null;
     const { assignmentId, submissionText } = req.body;
-    const studentId = req.user.id; // Extracted from JWT
+    const studentId = req.user.id;
 
     try {
-        // Check if assignment exists
         const assignment = await getAssignmentById(assignmentId);
         if (!assignment) {
             return res.status(404).json({ message: 'Assignment not found' });
         }
 
-        // Submit assignment
+        const now = moment();
+        const due = moment(assignment.due_date);
+        const isLate = now.isAfter(due);
+
         const submission = await submitAssignment(assignmentId, studentId, submissionText, fileUrl);
-        logger.info(`Student ${studentId} submitted assignment ${assignmentId}`);
-        res.status(201).json({ message: 'Assignment submitted successfully', submission });
+
+        res.status(201).json({
+            message: 'Assignment submitted successfully',
+            submission,
+            late: isLate
+        });
     } catch (error) {
         logger.error(`Error submitting assignment: ${error.message}`);
         res.status(500).json({ message: 'Error submitting assignment', error: error.message });

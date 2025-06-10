@@ -1,0 +1,24 @@
+<!-- public/quiz-take.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Take Quiz | LMS</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/quiz-take.css">
+    <script defer src="scripts/quiz-take.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1 id="quizTitle">Loading quiz...</h1>
+    <div id="timerBox" class="hidden">
+        <strong>Time Remaining:</strong> <span id="timeRemaining"></span>
+    </div>
+    <form id="quizForm" class="hidden">
+        <div id="questionsContainer"></div>
+        <button type="submit">Submit Quiz</button>
+    </form>
+    <p id="message" class="error mt-4"></p>
+</div>
+</body>
+</html>

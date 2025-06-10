@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Quiz Submissions | LMS</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <script defer src="scripts/quiz-submissions.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Quiz Submissions</h1>
+    <p id="quizTitle" class="mb-2 text-lg text-gray-700"></p>
+    <table>
+        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Attempt #</th>
+            <th>Score</th>
+            <th>Start Time</th>
+            <th>Submitted At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="submissionsTableBody">
+        <!-- Submissions will be injected here -->
+        </tbody>
+    </table>
+    <p id="message" class="error mt-4"></p>
+</div>
+</body>
+</html>

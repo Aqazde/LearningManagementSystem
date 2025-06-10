@@ -4,7 +4,8 @@ const {
     saveQuizAnswer,
     finalizeQuizSubmission,
     getSubmissionsByQuiz,
-    getAnswersBySubmission
+    getAnswersBySubmission,
+    hasStudentAttempted
 } = require('../models/quiz_submission');
 const { getQuizById, getQuestionsByQuizId } = require('../models/quiz'); // Assuming these exist
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
@@ -23,11 +24,17 @@ router.post('/submit', authenticateToken, authorizeRoles('student'), async (req,
 
     try {
         const quiz = await getQuizById(quizId);
+
         if (!quiz) {
             return res.status(404).json({ message: 'Quiz not found' });
         }
 
-        const submission = await createQuizSubmission(quizId, studentId, startTime);
+        const alreadyAttempted = await hasStudentAttempted(quizId, studentId);
+        if (alreadyAttempted && !quiz.allow_multiple_attempts) {
+            return res.status(403).json({ message: "You have already taken this quiz. Only one attempt allowed." });
+        }
+
+        const submission = await createQuizSubmission(quizId, studentId, startTime, 1);
         const questions = await getQuestionsByQuizId(quizId);
 
         let totalScore = 0;

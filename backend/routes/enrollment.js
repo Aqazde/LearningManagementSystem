@@ -16,13 +16,11 @@ router.post('/:courseId', authenticateToken, authorizeRoles('student'), async (r
     const courseId = req.params.courseId;
 
     try {
-        // Check if course exists
         const course = await getCourseById(courseId);
         if (!course) {
             return res.status(404).json({ message: 'Course not found' });
         }
 
-        // Enroll student
         const enrollment = await enrollStudent(userId, courseId);
         logger.info(`User ${userId} enrolled in course ${courseId}`);
         res.status(201).json({ message: 'Enrolled successfully', enrollment });
