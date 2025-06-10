@@ -17,6 +17,7 @@ const courseContentRoutes = require('./routes/course_content');
 const quizRoutes = require('./routes/quiz');
 const quizSubmissionRoutes = require('./routes/quiz_submission');
 const dashboardRoutes = require('./routes/dashboard');
+const teacherRoutes = require('./routes/teacher');
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,6 +38,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/dashboard', dashboardRoutes);
 
 app.use('/api/plagiarism', require('./routes/plagiarism'));
+app.use('/api/teacher', teacherRoutes);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
