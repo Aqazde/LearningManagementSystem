@@ -5,7 +5,8 @@ const {
     finalizeQuizSubmission,
     getSubmissionsByQuiz,
     getAnswersBySubmission,
-    hasStudentAttempted
+    hasStudentAttempted,
+    getSubmissionByStudent
 } = require('../models/quiz_submission');
 const { getQuizById, getQuestionsByQuizId } = require('../models/quiz'); // Assuming these exist
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
@@ -101,6 +102,32 @@ router.get('/submissions/:submissionId', authenticateToken, async (req, res) => 
     } catch (error) {
         logger.error(`Error fetching quiz answers: ${error.message}`);
         res.status(500).json({ message: 'Error fetching answers', error: error.message });
+    }
+});
+
+/**
+ * 🔹 Get a student's submission for a quiz (auth'd student only)
+ * GET /api/quizzes/:quizId/my-submission
+ */
+router.get('/:quizId/my-submission', authenticateToken, authorizeRoles('student'), async (req, res) => {
+    const quizId = req.params.quizId;
+    const studentId = req.user.id;
+
+    try {
+        const submission = await getSubmissionByStudent(quizId, studentId);
+        if (!submission) {
+            return res.status(404).json({ message: 'No submission found for this student and quiz' });
+        }
+
+        const answers = await getAnswersBySubmission(submission.id);
+
+        res.json({
+            submission,
+            answers
+        });
+    } catch (error) {
+        logger.error(`Error getting student's submission: ${error.message}`);
+        res.status(500).json({ message: 'Failed to fetch submission', error: error.message });
     }
 });
 
