@@ -74,11 +74,24 @@ const hasStudentAttempted = async (quizId, studentId) => {
     return result.rows.length > 0;
 };
 
+const getSubmissionByStudent = async (quizId, studentId) => {
+    const query = `
+        SELECT *
+        FROM quiz_submissions
+        WHERE quiz_id = $1 AND student_id = $2
+        ORDER BY submitted_at DESC
+        LIMIT 1;
+    `;
+    const result = await pool.query(query, [quizId, studentId]);
+    return result.rows[0]; // либо null
+};
+
 module.exports = {
     createQuizSubmission,
     saveQuizAnswer,
     finalizeQuizSubmission,
     getSubmissionsByQuiz,
     getAnswersBySubmission,
-    hasStudentAttempted
+    hasStudentAttempted,
+    getSubmissionByStudent
 };
