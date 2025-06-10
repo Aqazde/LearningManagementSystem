@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Recommendations</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-white text-gray-900 font-sans">
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-4">📘 Study Recommendation</h1>
 
+    <div id="loading" class="text-blue-600 mb-4"></div>
+    <div id="recommendationMessage" class="text-red-600 mb-4"></div>
+    <div id="recommendationResult" class="bg-gray-100 p-4 rounded border border-gray-300"></div>
+
+    <div class="mt-8">
+      <a href="student-dashboard.html" class="text-blue-600 underline hover:text-blue-800">← Back to Dashboard</a>
+    </div>
+  </div>
+
+  <script src="scripts/recommendations.js"></script>
 </body>
 </html>
