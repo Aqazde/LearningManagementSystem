@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 div.innerHTML = `
           <h3 class="text-lg font-bold mb-1">${course.title}</h3>
           <p class="text-sm text-gray-600 mb-2">${course.description || "No description"}</p>
-          <a href="course-detail.html?id=${course.id}" class="text-blue-600 underline">Manage</a>
+          <p class="text-sm text-blue-600 italic">Management features coming soon</p>
         `;
                 coursesContainer.appendChild(div);
 
