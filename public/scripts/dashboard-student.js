@@ -80,14 +80,30 @@ function renderAssignments(assignments) {
         return;
     }
 
+    const now = new Date();
+
     assignments.forEach((a) => {
+        console.log(a);
+        const dueDate = new Date(a.due_date);
+        const isOverdue = dueDate < now;
+        const isToday = dueDate.toDateString() === now.toDateString();
+        const dueClass = isOverdue
+            ? "text-red-600"
+            : isToday
+            ? "text-yellow-600"
+            : "text-gray-600";
+
+        const assignmentId = a.assignment_id || a.id;
+
         const card = document.createElement("div");
         card.className = "bg-white p-4 rounded-lg shadow-md";
+
         card.innerHTML = `
-            <h3 class="font-medium">${a.title}</h3>
-            <p class="text-sm text-gray-600">Due: ${new Date(a.due_date).toLocaleDateString()}</p>
-            <a href="assignment.html?id=${a.id}" class="inline-block mt-2 text-blue-500">Submit</a>
+            <h3 class="font-semibold text-lg text-gray-800">${a.title}</h3>
+            <p class="text-sm ${dueClass}">Due: ${dueDate.toLocaleDateString()}</p>
+            <a href="assignment-submit.html?id=${assignmentId}" class="inline-block mt-2 text-blue-600 font-medium hover:underline">Submit</a>
         `;
+
         container.appendChild(card);
     });
 }
