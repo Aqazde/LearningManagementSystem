@@ -48,13 +48,18 @@ function renderQuestions(questions) {
     questions.forEach((q, index) => {
         const div = document.createElement("div");
         div.className = "question-block";
-        div.innerHTML = `
-            <p>Question ${index + 1}: ${q.question_text}</p>
-            ${q.question_type === "multiple_choice" ? renderOptions(q) : ""}
-        `;
+
+        const questionText = `<p class="font-medium text-gray-800">Question ${index + 1}: ${q.question_text}</p>`;
+
+        const inputField = q.question_type === "multiple_choice"
+            ? renderOptions(q)
+            : `<textarea name="q_${q.id}" rows="4" required class="mt-2 w-full p-2 border border-gray-300 rounded"></textarea>`;
+
+        div.innerHTML = `${questionText}${inputField}`;
         container.appendChild(div);
     });
 }
+
 
 function renderOptions(question) {
     const options = question.options || [];
