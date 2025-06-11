@@ -86,9 +86,9 @@ async function fetchQuizzes() {
 
         for (const q of quizzes) {
             const li = document.createElement('li');
-            li.innerHTML = `<strong>${q.title}</strong> - Due: ${new Date(q.due_date).toLocaleDateString()} <br>
-                            <a href="quiz-preview.html?id=${q.id}" class="text-blue-600">Take Quiz</a>`;
-            quizList.appendChild(li);
+            const dueDate = new Date(q.due_date).toLocaleDateString();
+
+            let submissionExists = false;
 
             try {
                 const subRes = await fetch(`/api/quizzes/${q.id}/my-submission`, {
@@ -96,8 +96,10 @@ async function fetchQuizzes() {
                 });
 
                 if (subRes.ok) {
+                    submissionExists = true;
                     quizTaken = true;
 
+                    // Show quiz-specific recommendation
                     const recList = document.getElementById("quizRecommendations");
                     const item = document.createElement("li");
                     item.innerHTML = `
@@ -107,8 +109,22 @@ async function fetchQuizzes() {
                     recList.appendChild(item);
                 }
             } catch (err) {
-                console.warn(`No submission for quiz ${q.id}`);
+                // No submission
             }
+
+            let actionHTML = "";
+
+            if (!submissionExists || q.allow_multiple_attempts) {
+                actionHTML = `<a href="quiz-preview.html?id=${q.id}" class="text-blue-600 hover:underline">Take Quiz</a>`;
+            } else {
+                actionHTML = `<span class="text-gray-500 italic">❌ You’ve already submitted this quiz (no retakes allowed)</span>`;
+            }
+
+            li.innerHTML = `
+                <strong>${q.title}</strong> - Due: ${dueDate} <br>
+                ${actionHTML}
+            `;
+            quizList.appendChild(li);
         }
 
         if (quizTaken) {
@@ -121,7 +137,6 @@ async function fetchQuizzes() {
         message.textContent = 'Failed to load quizzes';
     }
 }
-
 
 function logout() {
     localStorage.removeItem('accessToken');
