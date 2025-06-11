@@ -1,7 +1,7 @@
 const express = require('express');
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
 const { logger } = require('../utils/logger');
-const { OpenAI } = require('openai'); // or however you're initializing OpenAI SDK
+const { OpenAI } = require('openai');
 
 const router = express.Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
