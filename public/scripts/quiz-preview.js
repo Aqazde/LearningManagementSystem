@@ -46,3 +46,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         message.textContent = "⚠️ " + err.message;
     }
 });
+
+function logout() {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("role");
+  window.location.href = "index.html";
+}
