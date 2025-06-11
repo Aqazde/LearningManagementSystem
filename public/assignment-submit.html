@@ -1,34 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Submit Assignment | LMS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <title>Submit Assignment | LMS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/heroicons@2.0.13/dist/heroicons.min.js"></script>
 </head>
-<body class="bg-gray-100">
-<nav class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto flex justify-between items-center">
-        <a href="student-dashboard.html" class="text-xl font-bold">← Back</a>
-        <button onclick="logout()" class="bg-blue-700 px-3 py-1 rounded">Logout</button>
-    </div>
-</nav>
+<body class="flex bg-gray-100 min-h-screen">
 
-<main class="container mx-auto p-6 max-w-xl bg-white rounded shadow">
-    <h1 class="text-2xl font-bold mb-4" id="assignmentTitle">Loading...</h1>
-    <p class="text-gray-700 mb-4" id="assignmentDescription"></p>
-    <p class="text-sm text-gray-600 mb-4">Due: <span id="assignmentDueDate">-</span></p>
+<!-- Sidebar -->
+<aside class="w-64 bg-white shadow-lg hidden md:block">
+  <div class="p-6 border-b">
+    <h1 class="text-xl font-bold text-blue-600">AI LMS</h1>
+  </div>
+  <nav class="p-4 space-y-2 text-gray-700">
+    <a href="student-dashboard.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3" />
+      </svg>
+      Dashboard
+    </a>
+    <a href="profile.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M5.121 17.804A10.971 10.971 0 0012 20c2.485 0 4.778-.812 6.879-2.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      Profile
+    </a>
+    <a href="recommendations.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      Recommendations
+    </a>
+  </nav>
+  <div class="p-4">
+    <button onclick="logout()" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Logout
+    </button>
+  </div>
+</aside>
 
+<!-- Main Content -->
+<main class="flex-1 p-6">
+  <header class="mb-6">
+    <h1 id="assignmentTitle" class="text-2xl font-bold text-gray-800">Loading assignment...</h1>
+    <p id="assignmentDescription" class="text-gray-600 mt-2"></p>
+    <p class="text-sm text-gray-500 mt-1">Due: <span id="assignmentDueDate">-</span></p>
+  </header>
+
+  <section class="bg-white p-6 rounded-lg shadow max-w-2xl">
     <form id="submitForm" enctype="multipart/form-data" class="space-y-4">
-        <textarea name="submissionText" id="submissionText" class="w-full p-2 border rounded" rows="5" placeholder="Write your answer here..."></textarea>
+      <textarea name="submissionText" id="submissionText" class="w-full p-3 border rounded" rows="6" placeholder="Write your answer here..."></textarea>
 
-        <input type="file" name="file" id="file" class="w-full border p-2" />
+      <div>
+        <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Upload File (optional)</label>
+        <input type="file" name="file" id="file" class="w-full border p-2 rounded" />
+      </div>
 
-        <input type="hidden" name="assignmentId" id="assignmentId" />
+      <input type="hidden" name="assignmentId" id="assignmentId" />
 
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit Assignment</button>
-        <p id="submitMessage" class="text-sm text-red-600"></p>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        Submit Assignment
+      </button>
+
+      <p id="submitMessage" class="text-sm mt-2"></p>
     </form>
+  </section>
 </main>
 
 <script src="scripts/assignment-submit.js"></script>
