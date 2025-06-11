@@ -8,7 +8,7 @@ const {
     hasStudentAttempted,
     getSubmissionByStudent
 } = require('../models/quiz_submission');
-const { getQuizById, getQuestionsByQuizId } = require('../models/quiz'); // Assuming these exist
+const { getQuizById, getQuestionsByQuizId } = require('../models/quiz');
 const { authenticateToken, authorizeRoles } = require('../middlewares/auth');
 const { logger } = require('../utils/logger');
 
