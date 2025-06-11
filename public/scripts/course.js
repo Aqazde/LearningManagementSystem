@@ -82,16 +82,46 @@ async function fetchQuizzes() {
         const quizzes = await res.json();
         if (!res.ok) throw new Error(quizzes.message);
 
-        quizzes.forEach(q => {
+        let quizTaken = false;
+
+        for (const q of quizzes) {
             const li = document.createElement('li');
             li.innerHTML = `<strong>${q.title}</strong> - Due: ${new Date(q.due_date).toLocaleDateString()} <br>
                             <a href="quiz-preview.html?id=${q.id}" class="text-blue-600">Take Quiz</a>`;
             quizList.appendChild(li);
-        });
+
+            try {
+                const subRes = await fetch(`/api/quizzes/${q.id}/my-submission`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (subRes.ok) {
+                    quizTaken = true;
+
+                    const recList = document.getElementById("quizRecommendations");
+                    const item = document.createElement("li");
+                    item.innerHTML = `
+                        ✅ <strong>${q.title}</strong><br>
+                        <a href="recommendations.html?quizId=${q.id}" class="text-blue-600">Get personalized recommendation</a>
+                    `;
+                    recList.appendChild(item);
+                }
+            } catch (err) {
+                console.warn(`No submission for quiz ${q.id}`);
+            }
+        }
+
+        if (quizTaken) {
+            document.getElementById("recommendationSection").classList.remove("hidden");
+            document.getElementById("courseRecommendationLink").href = `recommendations.html?courseId=${courseId}`;
+        }
+
     } catch (err) {
+        console.error("Failed to load quizzes", err);
         message.textContent = 'Failed to load quizzes';
     }
 }
+
 
 function logout() {
     localStorage.removeItem('accessToken');
