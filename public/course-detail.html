@@ -1,42 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Course Detail | LMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Course Detail | LMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/heroicons@2.0.13/dist/heroicons.min.js"></script>
 </head>
-<body class="bg-gray-100">
-<nav class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto flex justify-between items-center">
-        <a href="student-dashboard.html" class="text-xl font-bold">← Back to Dashboard</a>
-        <button onclick="logout()" class="bg-blue-700 px-3 py-1 rounded">Logout</button>
-    </div>
-</nav>
+<body class="flex bg-gray-100 min-h-screen">
 
-<main class="container mx-auto p-6">
-    <h1 id="courseTitle" class="text-2xl font-bold mb-2">Loading Course...</h1>
-    <p id="courseDescription" class="text-gray-700 mb-6"></p>
+<!-- Sidebar -->
+<aside class="w-64 bg-white shadow-lg hidden md:block">
+  <div class="p-6 border-b">
+    <h1 class="text-xl font-bold text-blue-600">AI LMS</h1>
+  </div>
+  <nav class="p-4 space-y-2 text-gray-700">
+    <a href="student-dashboard.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3" />
+      </svg>
+      Dashboard
+    </a>
+    <a href="profile.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M5.121 17.804A10.971 10.971 0 0012 20c2.485 0 4.778-.812 6.879-2.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      Profile
+    </a>
+    <a href="recommendations.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      Recommendations
+    </a>
+  </nav>
+  <div class="p-4">
+    <button onclick="logout()" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Logout
+    </button>
+  </div>
+</aside>
 
-    <h2 class="text-xl font-semibold mb-2">Course Content</h2>
-    <ul id="contentList" class="mb-6 space-y-2">
-        <!-- List of course content -->
+<!-- Main Content -->
+<main class="flex-1 p-6">
+  <header class="mb-6">
+    <h1 id="courseTitle" class="text-2xl font-bold text-gray-800">Loading Course...</h1>
+    <p id="courseDescription" class="text-gray-600 mt-2"></p>
+  </header>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-semibold text-gray-700 mb-3">📂 Course Content</h2>
+    <ul id="contentList" class="space-y-2">
+      <!-- List of course content -->
     </ul>
+  </section>
 
-    <h2 class="text-xl font-semibold mb-2">Assignments</h2>
-    <ul id="assignmentList" class="mb-6 space-y-2">
-        <!-- List of assignments -->
+  <section class="mb-10">
+    <h2 class="text-xl font-semibold text-gray-700 mb-3">📝 Assignments</h2>
+    <ul id="assignmentList" class="space-y-2">
+      <!-- List of assignments -->
     </ul>
+  </section>
 
-    <h2 class="text-xl font-semibold mb-2">Quizzes</h2>
+  <section class="mb-10">
+    <h2 class="text-xl font-semibold text-gray-700 mb-3">🧪 Quizzes</h2>
     <ul id="quizList" class="space-y-2">
-        <!-- List of quizzes -->
+      <!-- List of quizzes -->
     </ul>
+  </section>
 
-    <p id="courseMessage" class="text-red-600 mt-4"></p>
-
-
-    <section id="recommendationSection" class="mt-10 hidden">
+  <section id="recommendationSection" class="mt-10 hidden">
     <h2 class="text-xl font-semibold mb-2">📚 Personalized Recommendations</h2>
     <ul id="quizRecommendations" class="space-y-2 mb-4">
         <!-- Quiz-level recommendations -->
@@ -46,7 +82,9 @@
        href="#">
         View Course-Level Recommendation
     </a>
-</section>
+  </section>
+
+  <p id="courseMessage" class="text-red-600 mt-6"></p>
 </main>
 
 <script src="scripts/course.js"></script>
