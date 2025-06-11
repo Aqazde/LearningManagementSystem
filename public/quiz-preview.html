@@ -1,37 +1,86 @@
-<!-- public/quiz-preview.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quiz Preview | LMS</title>
-  <link rel="stylesheet" href="styles/style.css">
-  <script defer src="scripts/quiz-preview.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/heroicons@2.0.13/dist/heroicons.min.js"></script>
 </head>
-<body>
-<div class="container">
-  <h1>Quiz Preview</h1>
+<body class="flex bg-gray-100 min-h-screen">
 
-  <div id="quizDetails" class="hidden">
-    <h2 id="quizTitle"></h2>
-    <p id="quizDescription"></p>
-    <p><strong>Time Limit:</strong> <span id="quizTime"></span> minutes</p>
-    <p><strong>Due Date:</strong> <span id="quizDueDate"></span></p>
-    <p><strong>Attempts:</strong> <span id="quizAttempts"></span></p>
-
-    <button id="startQuizBtn">Take Quiz</button>
+<!-- Sidebar -->
+<aside class="w-64 bg-white shadow-lg hidden md:block">
+  <div class="p-6 border-b">
+    <h1 class="text-xl font-bold text-blue-600">AI LMS</h1>
   </div>
+  <nav class="p-4 space-y-2 text-gray-700">
+    <a href="student-dashboard.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3" />
+      </svg>
+      Dashboard
+    </a>
+    <a href="profile.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M5.121 17.804A10.971 10.971 0 0012 20c2.485 0 4.778-.812 6.879-2.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      Profile
+    </a>
+    <a href="recommendations.html" class="flex items-center p-2 rounded hover:bg-blue-100">
+      <svg class="h-5 w-5 mr-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      Recommendations
+    </a>
+  </nav>
+  <div class="p-4">
+    <button onclick="logout()" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Logout
+    </button>
+  </div>
+</aside>
 
-  <div id="confirmModal" class="modal hidden">
-    <div class="modal-content">
-      <p>Are you sure you want to start this quiz? Time will start immediately and you may not get another attempt.</p>
-      <div class="modal-actions">
-        <button id="confirmStartBtn" class="btn btn-primary">Yes, Start</button>
-        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+<!-- Main Content -->
+<main class="flex-1 p-6">
+  <section class="max-w-2xl bg-white rounded-lg shadow p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Quiz Preview</h1>
+
+    <div id="quizDetails" class="hidden">
+      <h2 id="quizTitle" class="text-xl font-semibold text-gray-700"></h2>
+      <p id="quizDescription" class="text-gray-600 mt-1 mb-3"></p>
+
+      <ul class="text-sm text-gray-700 space-y-1 mb-4">
+        <li><strong>Time Limit:</strong> <span id="quizTime"></span> minutes</li>
+        <li><strong>Due Date:</strong> <span id="quizDueDate"></span></li>
+        <li><strong>Attempts:</strong> <span id="quizAttempts"></span></li>
+      </ul>
+
+      <button id="startQuizBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Take Quiz
+      </button>
+    </div>
+
+    <p id="message" class="text-red-600 text-sm mt-4"></p>
+  </section>
+
+  <!-- Modal -->
+  <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded shadow-lg max-w-md w-full">
+      <p class="text-gray-700 mb-4">
+        Are you sure you want to start this quiz? Time will start immediately and you may not get another attempt.
+      </p>
+      <div class="flex justify-end space-x-2">
+        <button id="cancelBtn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+        <button id="confirmStartBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Yes, Start</button>
       </div>
     </div>
   </div>
+</main>
 
-  <p id="message" class="error"></p>
-</div>
+<script src="scripts/quiz-preview.js"></script>
 </body>
 </html>
